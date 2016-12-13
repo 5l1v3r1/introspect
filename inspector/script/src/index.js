@@ -6,12 +6,8 @@
   }
 
   App.prototype._handleUpload = function(contents) {
-    try {
-      var edit = new window.EditScene(contents);
-      edit.show();
-    } catch (e) {
-      alert('failed to process contents: ' + e);
-    }
+    var edit = new window.EditScene(contents);
+    edit.show();
   };
 
   window.addEventListener('load', function() {

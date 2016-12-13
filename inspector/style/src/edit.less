@@ -8,3 +8,67 @@ body.editing {
     display: block;
   }
 }
+
+#back-button {
+  position: absolute;
+  top: 20px;
+  left: ~'calc(50% - 30px)';
+  width: 60px;
+  height: 60px;
+
+  cursor: pointer;
+
+  border-radius: 30px;
+  border: none;
+
+  background-image: url('../img/back.svg');
+  background-size: 60% 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: white;
+  color: transparent;
+
+  opacity: 1;
+  transition: opacity 0.25s ease, -webkit-transform 0.25s ease;
+  -webkit-transition: opacity 0.25s ease, transform 0.25s ease;
+
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+  }
+}
+
+.pane {
+  position: absolute;
+  top: 100px;
+  left: ~'calc(50% - 250px)';
+
+  border-box: box-sizing;
+  padding: 10px;
+  width: 500px;
+
+  background-color: white;
+  font-family: sans-serif;
+
+  -webkit-transition: opacity 0.25s ease, -webkit-transform 0.25s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+
+  &.hidden {
+    opacity: 0;
+    transform: translate(0, 10px);
+    -webkit-transform: translate(0, 10px);
+  }
+}
+
+.unsupported-pane {
+  text-align: center;
+
+  h1 {
+    font-weight: 300;
+  }
+}

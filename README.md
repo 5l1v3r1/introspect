@@ -1,6 +1,6 @@
 # introspect
 
-This project aims to discover how neural networks&mdash;and specifically LSTMs&mdash;represent knowledge. I believe that this is a relatively unexplored question, yet it could be essential to furthering the field of deep learning. By understanding how neural nets represent knowledge, we may be able to build better architectures or even invent new training algorithms.
+This project aims to discover how neural networks&mdash;and specifically LSTMs&mdash;represent knowledge. I believe that this is a relatively unexplored question, yet it could be essential to the future of deep learning. By understanding how neural nets represent knowledge, we may be able to build better architectures or even invent new training algorithms.
 
 # Roadmap
 
