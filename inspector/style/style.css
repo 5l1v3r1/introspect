@@ -1,0 +1,43 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #bbb;
+}
+#upload-scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+body.uploading #upload-scene {
+  display: block;
+}
+#upload-button {
+  position: absolute;
+  left: calc(50% - 120px);
+  top: calc(50% - 60px);
+  width: 240px;
+  height: 120px;
+  color: #555;
+  font-size: 30px;
+  background-color: transparent;
+  cursor: pointer;
+  border: solid 5px #555;
+}
+#upload-scene.dragging #upload-button {
+  border-style: dashed;
+}
+#edit-scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+body.editing #edit-scene {
+  display: block;
+}

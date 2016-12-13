@@ -1,0 +1,29 @@
+#upload-scene {
+  .scene();
+  display: none;
+}
+
+body.uploading {
+  #upload-scene {
+    display: block;
+  }
+}
+
+#upload-button {
+  position: absolute;
+  left: ~'calc(50% - 120px)';
+  top: ~'calc(50% - 60px)';
+  width: 240px;
+  height: 120px;
+
+  color: #555;
+  font-size: 30px;
+  background-color: transparent;
+  cursor: pointer;
+
+  border: solid 5px #555;
+
+  #upload-scene.dragging & {
+    border-style: dashed;
+  }
+}
