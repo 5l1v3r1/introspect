@@ -83,7 +83,7 @@ body.editing #edit-scene {
   position: absolute;
   top: 100px;
   left: calc(50% - 250px);
-  border-box: box-sizing;
+  box-sizing: border-box;
   padding: 10px;
   width: 500px;
   background-color: white;
@@ -96,6 +96,12 @@ body.editing #edit-scene {
   transform: translate(0, 10px);
   -webkit-transform: translate(0, 10px);
 }
+@media screen and (max-width: 520px) {
+  .pane {
+    width: calc(100% - 20px);
+    left: 10px;
+  }
+}
 .unsupported-pane {
   text-align: center;
 }
@@ -105,7 +111,6 @@ body.editing #edit-scene {
 .vec-field,
 .mat-field {
   width: 100%;
-  height: 30px;
   margin: 10px 0;
 }
 .vec-field label,
