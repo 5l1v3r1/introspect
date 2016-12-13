@@ -1,9 +1,15 @@
 (function() {
 
   function UploadScene() {
+    this.onUpload = null;
+
     $('#upload-button').click(this._showPicker.bind(this));
     this._registerDragging();
   }
+
+  UploadScene.prototype.show = function() {
+    document.body.className = 'uploading';
+  };
 
   UploadScene.prototype._showPicker = function() {
     var fakeInput = $('<input type="file">').css({visibility: 'hidden'});
@@ -56,7 +62,9 @@
   };
 
   UploadScene.prototype._handleFiles = function(files) {
-    console.log('handling ' + files.length + ' files.');
+    if (this.onUpload) {
+      this.onUpload(files);
+    }
   };
 
   window.UploadScene = UploadScene;
