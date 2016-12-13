@@ -7,6 +7,7 @@
 
   App.prototype._handleUpload = function(contents) {
     var edit = new window.EditScene(contents);
+    edit.onExit = this._uploadScene.show.bind(this);
     edit.show();
   };
 

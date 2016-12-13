@@ -58,12 +58,8 @@ body.editing #edit-scene {
   background-color: white;
   color: transparent;
   opacity: 1;
-  transition: opacity 0.25s ease, -webkit-transform 0.25s ease;
-  -webkit-transition: opacity 0.25s ease, transform 0.25s ease;
-}
-#back-button.hidden {
-  opacity: 0;
-  pointer-events: none;
+  transition: -webkit-transform 0.25s ease;
+  -webkit-transition: transform 0.25s ease;
 }
 #back-button:hover {
   transform: scale(1.1);
@@ -91,4 +87,36 @@ body.editing #edit-scene {
 }
 .unsupported-pane h1 {
   font-weight: 300;
+}
+.vec-field,
+.mat-field {
+  width: 100%;
+  height: 30px;
+  margin: 10px 0;
+}
+.vec-field label,
+.mat-field label {
+  height: 30px;
+  line-height: 30px;
+  display: inline-block;
+  width: calc(50% - 5px);
+  text-align: right;
+  margin-right: 10px;
+}
+.vec-field button,
+.mat-field button {
+  padding: 0;
+  margin: 0;
+  width: 100px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  background-color: #777;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+.vec-field button:hover,
+.mat-field button:hover {
+  background-color: #555;
 }

@@ -1,6 +1,8 @@
 (function() {
 
   function EditScene(contents) {
+    this.onExit = null;
+
     this._animating = false;
     var obj = window.deserializeObject(contents);
     this._stack = [];
@@ -8,7 +10,7 @@
       this._stack.push(new UnsupportedPane(obj.type));
     } else {
       var paneClass = window.paneRegistry[obj.type];
-      this._stack.push(new paneClass(obj));
+      this._stack.push(new paneClass(obj.data));
     }
     $('#back-button').click(this._back.bind(this));
   }
@@ -28,10 +30,6 @@
     this._stack.push(pane);
     this._animating = true;
 
-    if (this._stack.length > 1) {
-      $('#back-button').removeClass('hidden');
-    }
-
     current.hide(function() {
       pane.show(function() {
         pane.onPush = this._push.bind(this);
@@ -41,11 +39,17 @@
   };
 
   EditScene.prototype._back = function() {
-    if (this._animating || this._stack.length === 1) {
+    if (this._animating) {
       return;
     }
-    if (this._stack.length === 2) {
-      $('#back-button').addClass('hidden');
+    if (this._stack.length === 1) {
+      $('#back-button').unbind('click');
+      this._animating = true;
+      this._stack[0].onPush = function() {};
+      this._stack[0].hide(function() {
+        this.onExit();
+      }.bind(this));
+      return;
     }
     this._animating = true;
     var removing = this._stack[this._stack.length-1];
@@ -91,15 +95,12 @@
     EditorPane.call(this);
     this.element.append($('<h1></h1>').text('Unsupported type: ' + name));
     this.element.addClass('unsupported-pane');
-
-    this.element.click(function() {
-      this.onPush(new UnsupportedPane('yo ' + name));
-    }.bind(this));
   }
 
   UnsupportedPane.prototype = Object.create(EditorPane.prototype);
   UnsupportedPane.prototype.constructor = UnsupportedPane;
 
+  window.paneRegistry = {};
   window.EditScene = EditScene;
   window.EditorPane = EditorPane;
 
@@ -113,6 +114,7 @@
 
   App.prototype._handleUpload = function(contents) {
     var edit = new window.EditScene(contents);
+    edit.onExit = this._uploadScene.show.bind(this);
     edit.show();
   };
 
@@ -210,5 +212,95 @@
   };
 
   window.UploadScene = UploadScene;
+
+})();
+(function() {
+
+  function LSTMPane(data) {
+    window.EditorPane.call(this);
+    var inValWeights = data[0];
+    var inValBiases = data[1];
+    var inGateWeights = data[2];
+    var inGateBiases = data[3];
+    var remGateWeights = data[4];
+    var remGateBiases = data[5];
+    var outGateWeights = data[6];
+    var outGateBiases = data[7];
+    var initState = data[8];
+    var inValPeep = data[9];
+    var inGatePeep = data[10];
+    var remGatePeep = data[11];
+    var outGatePeep = data[12];
+
+    this._stateSize = initState.length;
+    this._inSize = inValWeights.length/this._stateSize - this._stateSize;
+
+    var matrices = [inValWeights, inGateWeights, remGateWeights, outGateWeights];
+    var biases = [inValBiases, inGateBiases, remGateBiases, outGateBiases];
+    var peeps = [inValPeep, inGatePeep, remGatePeep, outGatePeep];
+
+    this.element.append(this._vecField('InitState', initState));
+
+    var names = ['In Val.', 'In Gate', 'Rem. Gate', 'Out Gate'];
+    for (var i = 0; i < 4; i++) {
+      this.element.append(this._vecField(names[i]+' Bias', biases[i]));
+      this.element.append(this._vecField(names[i]+' Peephole', peeps[i]));
+      this.element.append(this._matField(names[i]+' Weights', matrices[i]));
+    }
+  }
+
+  LSTMPane.prototype = Object.create(window.EditorPane.prototype);
+  LSTMPane.prototype.constructor = LSTMPane;
+
+  LSTMPane.prototype._vecField = function(name, vec) {
+    var field = $('<div></div>').addClass('vec-field');
+    field.append($('<label></label>').text(name));
+    field.append($('<button></button>').click(function() {
+      var pane = new window.VectorPane(vec);
+      this.onPush(pane);
+    }.bind(this)).text('Edit'));
+    return field;
+  };
+
+  LSTMPane.prototype._matField = function(name, mat) {
+    var field = $('<div></div>').addClass('mat-field');
+    field.append($('<label></label>').text(name));
+    field.append($('<button></button>').click(function() {
+      var pane = new window.MatrixPane(this._stateSize,
+        this._inSize+this._stateSize, mat);
+      this.onPush(pane);
+    }.bind(this)).text('Edit'));
+    return field;
+  };
+
+  window.paneRegistry.LSTM = LSTMPane;
+
+})();
+(function() {
+
+  function VectorPane(values) {
+    window.EditorPane.call(this);
+    this._values = values;
+    this.element.append($('<label>TODO: vector here</label>'));
+    // TODO: initialize UI here.
+  }
+
+  VectorPane.prototype = Object.create(window.EditorPane.prototype);
+  VectorPane.prototype.constructor = VectorPane;
+
+  function MatrixPane(rows, cols, values) {
+    window.EditorPane.call(this);
+    this._rows = rows;
+    this._cols = cols;
+    this._values = values;
+    this.element.append($('<label>TODO: matrix here</label>'));
+    // TODO: initialize UI here.
+  }
+
+  MatrixPane.prototype = Object.create(window.EditorPane.prototype);
+  MatrixPane.prototype.constructor = MatrixPane;
+
+  window.VectorPane = VectorPane;
+  window.MatrixPane = MatrixPane;
 
 })();

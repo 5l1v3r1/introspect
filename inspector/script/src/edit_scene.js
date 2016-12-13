@@ -1,6 +1,8 @@
 (function() {
 
   function EditScene(contents) {
+    this.onExit = null;
+
     this._animating = false;
     var obj = window.deserializeObject(contents);
     this._stack = [];
@@ -8,7 +10,7 @@
       this._stack.push(new UnsupportedPane(obj.type));
     } else {
       var paneClass = window.paneRegistry[obj.type];
-      this._stack.push(new paneClass(obj));
+      this._stack.push(new paneClass(obj.data));
     }
     $('#back-button').click(this._back.bind(this));
   }
@@ -28,10 +30,6 @@
     this._stack.push(pane);
     this._animating = true;
 
-    if (this._stack.length > 1) {
-      $('#back-button').removeClass('hidden');
-    }
-
     current.hide(function() {
       pane.show(function() {
         pane.onPush = this._push.bind(this);
@@ -41,11 +39,17 @@
   };
 
   EditScene.prototype._back = function() {
-    if (this._animating || this._stack.length === 1) {
+    if (this._animating) {
       return;
     }
-    if (this._stack.length === 2) {
-      $('#back-button').addClass('hidden');
+    if (this._stack.length === 1) {
+      $('#back-button').unbind('click');
+      this._animating = true;
+      this._stack[0].onPush = function() {};
+      this._stack[0].hide(function() {
+        this.onExit();
+      }.bind(this));
+      return;
     }
     this._animating = true;
     var removing = this._stack[this._stack.length-1];
@@ -96,6 +100,7 @@
   UnsupportedPane.prototype = Object.create(EditorPane.prototype);
   UnsupportedPane.prototype.constructor = UnsupportedPane;
 
+  window.paneRegistry = {};
   window.EditScene = EditScene;
   window.EditorPane = EditorPane;
 
