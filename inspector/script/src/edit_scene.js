@@ -2,7 +2,8 @@
 
   function EditScene(contents) {
     // TODO: set things up here.
-    this._contents = contents;
+    var obj = window.deserializeObject(contents);
+    console.log('obj is', obj);
   }
 
   EditScene.prototype.show = function() {

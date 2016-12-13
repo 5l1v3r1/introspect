@@ -1,5 +1,7 @@
 (function() {
 
+  var MAX_SIZE = (100 << 20);
+
   function UploadScene() {
     this.onUpload = null;
 
@@ -62,9 +64,26 @@
   };
 
   UploadScene.prototype._handleFiles = function(files) {
-    if (this.onUpload) {
-      this.onUpload(files);
+    if (files.length !== 1) {
+      alert('must upload exactly one file');
+      return;
     }
+    if (files[0].size > MAX_SIZE) {
+      alert('file size is too large: ' + files[0].size);
+      return;
+    }
+    var reader = new FileReader();
+    reader.addEventListener('load', function() {
+      var contents = reader.result;
+      if (this.onUpload) {
+        this.onUpload(new window.Uint8Array(contents));
+      }
+    }.bind(this));
+    reader.addEventListener('error', function() {
+      alert('failed to read file');
+      return;
+    });
+    reader.readAsArrayBuffer(files[0]);
   };
 
   window.UploadScene = UploadScene;
