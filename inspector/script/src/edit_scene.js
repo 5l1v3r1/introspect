@@ -16,12 +16,16 @@
   }
 
   EditScene.prototype.show = function() {
+    $('#back-button').addClass('hidden');
     document.body.className = 'editing';
     this._animating = true;
     this._stack[0].show(function() {
       this._animating = false;
       this._stack[0].onPush = this._push.bind(this);
     }.bind(this));
+    setTimeout(function() {
+      $('#back-button').removeClass('hidden');
+    }, 100);
   };
 
   EditScene.prototype._push = function(pane) {
@@ -43,7 +47,7 @@
       return;
     }
     if (this._stack.length === 1) {
-      $('#back-button').unbind('click');
+      $('#back-button').unbind('click').addClass('hidden');
       this._animating = true;
       this._stack[0].onPush = function() {};
       this._stack[0].hide(function() {

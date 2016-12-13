@@ -27,6 +27,12 @@ body.uploading #upload-scene {
   background-color: transparent;
   cursor: pointer;
   border: solid 5px #555;
+  transition: opacity 0.25s ease;
+  -webkit-transition: opacity 0.25s ease;
+  opacity: 1;
+}
+#upload-button.hidden {
+  opacity: 0;
 }
 #upload-scene.dragging #upload-button {
   border-style: dashed;
@@ -58,12 +64,20 @@ body.editing #edit-scene {
   background-color: white;
   color: transparent;
   opacity: 1;
-  transition: -webkit-transform 0.25s ease;
-  -webkit-transition: transform 0.25s ease;
+  transition: opacity 0.25s ease, -webkit-transform 0.25s ease;
+  -webkit-transition: opacity 0.25s ease, transform 0.25s ease;
 }
 #back-button:hover {
   transform: scale(1.1);
   -webkit-transform: scale(1.1);
+}
+#back-button.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#back-button.hidden:hover {
+  transform: none;
+  -webkit-transform: none;
 }
 .pane {
   position: absolute;

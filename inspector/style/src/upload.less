@@ -23,6 +23,14 @@ body.uploading {
 
   border: solid 5px #555;
 
+  transition: opacity 0.25s ease;
+  -webkit-transition: opacity 0.25s ease;
+  opacity: 1;
+
+  &.hidden {
+    opacity: 0;
+  }
+
   #upload-scene.dragging & {
     border-style: dashed;
   }

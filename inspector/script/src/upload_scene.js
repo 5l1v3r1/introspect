@@ -10,7 +10,11 @@
   }
 
   UploadScene.prototype.show = function() {
+    $('#upload-button').addClass('hidden');
     document.body.className = 'uploading';
+    setTimeout(function() {
+      $('#upload-button').removeClass('hidden');
+    }, 100);
   };
 
   UploadScene.prototype._showPicker = function() {

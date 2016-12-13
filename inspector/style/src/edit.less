@@ -29,12 +29,22 @@ body.editing {
   color: transparent;
 
   opacity: 1;
-  transition: -webkit-transform 0.25s ease;
-  -webkit-transition: transform 0.25s ease;
+  transition: opacity 0.25s ease, -webkit-transform 0.25s ease;
+  -webkit-transition: opacity 0.25s ease, transform 0.25s ease;
 
   &:hover {
     transform: scale(1.1);
     -webkit-transform: scale(1.1);
+  }
+
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
+
+    &:hover {
+      transform: none;
+      -webkit-transform: none;
+    }
   }
 }
 
