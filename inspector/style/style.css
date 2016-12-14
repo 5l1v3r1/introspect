@@ -62,6 +62,7 @@ body.editing #edit-scene {
   background-repeat: no-repeat;
   background-position: center;
   background-color: white;
+  font-size: 0;
   color: transparent;
   opacity: 1;
   transition: opacity 0.25s ease, -webkit-transform 0.25s ease;
