@@ -94,12 +94,24 @@ body.editing #edit-scene {
   margin-right: 10px;
   font-size: 16px;
 }
+.pane table {
+  display: inline-block;
+}
 .vec-component {
   margin: 0;
   padding: 0 5px;
   height: 28px;
   line-height: 28px;
   font-size: 16px;
+}
+.mat-component {
+  margin: 0;
+  padding: 0 5px;
+  height: 28px;
+  line-height: 28px;
+  font-size: 16px;
+  font-family: monospace;
+  width: 54px;
 }
 .pane {
   position: absolute;
@@ -127,6 +139,9 @@ body.editing #edit-scene {
 }
 .unsupported-pane h1 {
   font-weight: 300;
+}
+.mat-pane {
+  overflow-x: scroll;
 }
 button:focus {
   outline: 0;

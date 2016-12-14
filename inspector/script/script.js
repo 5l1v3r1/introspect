@@ -263,7 +263,7 @@
     var remGatePeep = data[11];
     var outGatePeep = data[12];
 
-    this._stateSize = initState.length;
+    this._stateSize = inValBiases.length;
     this._inSize = inValWeights.length/this._stateSize - this._stateSize;
 
     var matrices = [inValWeights, inGateWeights, remGateWeights, outGateWeights];
@@ -343,11 +343,33 @@
 
   function MatrixPane(rows, cols, values) {
     window.EditorPane.call(this);
-    this._rows = rows;
-    this._cols = cols;
-    this._values = values;
-    this.element.append($('<label>TODO: matrix here</label>'));
-    // TODO: initialize UI here.
+
+    this.element.addClass('mat-pane');
+
+    var table = $('<table></table>');
+    var header = $('<thead></thead>').append($('<th></th>'));
+    for (var i = 0; i < cols; ++i) {
+      header.append($('<th></th>').text(i));
+    }
+    table.append(header);
+
+    for (var i = 0; i < rows; ++i) {
+      var row = $('<tr></tr>');
+      row.append($('<td></td>').text(i));
+      for (var col = 0; col < cols; ++col) {
+        var cellIdx = i*cols + col;
+        var input = $('<input>').val(values[cellIdx]).addClass('mat-component');
+        row.append($('<td></td>').append(input));
+        (function(idx) {
+          input.change(function(e) {
+            values[idx] = parseFloat(e.target.value);
+          });
+        })(cellIdx);
+      }
+      table.append(row);
+    }
+
+    this.element.append(table);
   }
 
   MatrixPane.prototype = Object.create(window.EditorPane.prototype);

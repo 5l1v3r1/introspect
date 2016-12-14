@@ -16,7 +16,7 @@
     var remGatePeep = data[11];
     var outGatePeep = data[12];
 
-    this._stateSize = initState.length;
+    this._stateSize = inValBiases.length;
     this._inSize = inValWeights.length/this._stateSize - this._stateSize;
 
     var matrices = [inValWeights, inGateWeights, remGateWeights, outGateWeights];

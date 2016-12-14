@@ -19,7 +19,8 @@ module.exports = {
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-redeclare": [0]
     },
     "globals": {"$": true}
 };
