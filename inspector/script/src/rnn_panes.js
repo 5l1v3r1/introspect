@@ -31,6 +31,9 @@
       this.element.append(this._vecField(names[i]+' Peephole', peeps[i]));
       this.element.append(this._matField(names[i]+' Weights', matrices[i]));
     }
+    this.element.append(createSaveButton().click(function() {
+      window.serializeAndDownload({type: 'LSTM', data: data});
+    }.bind(this)));
   }
 
   LSTMPane.prototype = Object.create(window.EditorPane.prototype);
@@ -60,6 +63,10 @@
 
   function createEditButton() {
     return $('<button class="edit-button">Edit</button>');
+  }
+
+  function createSaveButton() {
+    return $('<button class="save-button">Save</button>');
   }
 
   window.paneRegistry.LSTM = LSTMPane;

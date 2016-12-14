@@ -1,5 +1,20 @@
 (function() {
 
+  function serializeAndDownload(obj) {
+    var data = window.serializeObject(obj);
+    if (!data) {
+      alert('could not serialize');
+      return;
+    }
+    var str = String.fromCharCode.apply(String, data);
+    window.location = 'data:application/octet-stream;base64,' + btoa(str);
+  }
+
+  window.serializeAndDownload = serializeAndDownload;
+
+})();
+(function() {
+
   function EditScene(contents) {
     this.onExit = null;
     this._animating = false;
@@ -263,6 +278,9 @@
       this.element.append(this._vecField(names[i]+' Peephole', peeps[i]));
       this.element.append(this._matField(names[i]+' Weights', matrices[i]));
     }
+    this.element.append(createSaveButton().click(function() {
+      window.serializeAndDownload({type: 'LSTM', data: data});
+    }.bind(this)));
   }
 
   LSTMPane.prototype = Object.create(window.EditorPane.prototype);
@@ -294,6 +312,10 @@
     return $('<button class="edit-button">Edit</button>');
   }
 
+  function createSaveButton() {
+    return $('<button class="save-button">Save</button>');
+  }
+
   window.paneRegistry.LSTM = LSTMPane;
 
 })();
@@ -301,7 +323,6 @@
 
   function VectorPane(values) {
     window.EditorPane.call(this);
-    this.element.addClass('vec-pane');
     this._values = values;
     for (var i = 0, len = values.length; i < len; ++i) {
       var field = $('<div></div>').addClass('labeled-field');

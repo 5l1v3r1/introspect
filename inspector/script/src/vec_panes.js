@@ -2,7 +2,6 @@
 
   function VectorPane(values) {
     window.EditorPane.call(this);
-    this.element.addClass('vec-pane');
     this._values = values;
     for (var i = 0, len = values.length; i < len; ++i) {
       var field = $('<div></div>').addClass('labeled-field');

@@ -5,14 +5,9 @@ import (
 	"github.com/unixpickle/autofunc"
 	"github.com/unixpickle/serializer"
 	"github.com/unixpickle/sgd"
-
 	"github.com/unixpickle/weakai/neuralnet"
 	"github.com/unixpickle/weakai/rnn"
 )
-
-func main() {
-	js.Global.Set("deserializeObject", deserializeObject)
-}
 
 func deserializeObject(args *js.Object) interface{} {
 	buf := args.Interface().([]uint8)
