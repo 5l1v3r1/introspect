@@ -1,17 +1,11 @@
 (function() {
 
   function EditScene(contents) {
+    var obj = window.deserializeObject(contents);
+
     this.onExit = null;
     this._animating = false;
-    this._stack = [];
-
-    var obj = window.deserializeObject(contents);
-    if (!window.paneRegistry.hasOwnProperty(obj.type)) {
-      this._stack.push(new UnsupportedPane(obj.type));
-    } else {
-      var paneClass = window.paneRegistry[obj.type];
-      this._stack.push(new paneClass(obj.data));
-    }
+    this._stack = [paneForObject(obj)];
 
     $('#back-button').click(this._back.bind(this));
   }
@@ -112,7 +106,16 @@
   function nop() {
   }
 
+  function paneForObject(obj) {
+    if (!window.paneRegistry.hasOwnProperty(obj.type)) {
+      return new UnsupportedPane(obj.type);
+    }
+    var paneClass = window.paneRegistry[obj.type];
+    return new paneClass(obj.data);
+  }
+
   window.paneRegistry = {};
+  window.paneForObject = paneForObject;
   window.EditScene = EditScene;
   window.EditorPane = EditorPane;
 

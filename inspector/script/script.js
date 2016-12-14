@@ -16,17 +16,11 @@
 (function() {
 
   function EditScene(contents) {
+    var obj = window.deserializeObject(contents);
+
     this.onExit = null;
     this._animating = false;
-    this._stack = [];
-
-    var obj = window.deserializeObject(contents);
-    if (!window.paneRegistry.hasOwnProperty(obj.type)) {
-      this._stack.push(new UnsupportedPane(obj.type));
-    } else {
-      var paneClass = window.paneRegistry[obj.type];
-      this._stack.push(new paneClass(obj.data));
-    }
+    this._stack = [paneForObject(obj)];
 
     $('#back-button').click(this._back.bind(this));
   }
@@ -127,7 +121,16 @@
   function nop() {
   }
 
+  function paneForObject(obj) {
+    if (!window.paneRegistry.hasOwnProperty(obj.type)) {
+      return new UnsupportedPane(obj.type);
+    }
+    var paneClass = window.paneRegistry[obj.type];
+    return new paneClass(obj.data);
+  }
+
   window.paneRegistry = {};
+  window.paneForObject = paneForObject;
   window.EditScene = EditScene;
   window.EditorPane = EditorPane;
 
@@ -148,6 +151,30 @@
   window.addEventListener('load', function() {
     new App();
   });
+
+})();
+(function() {
+
+  function ListPane(items, title) {
+    window.EditorPane.call(this);
+    this.element.append($('<h1></h1>').text(title));
+    for (var i = 0, len = items.length; i < len; ++i) {
+      (function(item) {
+        var field = $('<div></div>').addClass('labeled-field');
+        field.append($('<label></label>').text(item.type));
+        var button = $('<button class="edit-button">Edit</button>');
+        field.append(button.click(function() {
+          this.onPush(window.paneForObject(item));
+        }.bind(this)));
+        this.element.append(field);
+      }.bind(this))(items[i]);
+    }
+  }
+
+  ListPane.prototype = Object.create(window.EditorPane.prototype);
+  ListPane.prototype.constructor = ListPane;
+
+  window.ListPane = ListPane;
 
 })();
 (function() {
@@ -249,6 +276,8 @@
 
   function LSTMPane(data) {
     window.EditorPane.call(this);
+    this.element.append($('<h1></h1>').text('LSTM'));
+
     var inValWeights = data[0];
     var inValBiases = data[1];
     var inGateWeights = data[2];
@@ -301,6 +330,14 @@
     }.bind(this));
   };
 
+  function StackedBlockPane(list) {
+    window.ListPane.call(this, list, 'StackedBlock');
+    // TODO: implement serialization.
+  }
+
+  StackedBlockPane.prototype = Object.create(window.ListPane.prototype);
+  StackedBlockPane.prototype.constructor = StackedBlockPane;
+
   function createEditField(name, onClick) {
     var field = $('<div></div>').addClass('labeled-field');
     field.append($('<label></label>').text(name));
@@ -317,6 +354,7 @@
   }
 
   window.paneRegistry.LSTM = LSTMPane;
+  window.paneRegistry.StackedBlock = StackedBlockPane;
 
 })();
 (function() {

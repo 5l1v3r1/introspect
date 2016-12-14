@@ -2,6 +2,8 @@
 
   function LSTMPane(data) {
     window.EditorPane.call(this);
+    this.element.append($('<h1></h1>').text('LSTM'));
+
     var inValWeights = data[0];
     var inValBiases = data[1];
     var inGateWeights = data[2];
@@ -54,6 +56,14 @@
     }.bind(this));
   };
 
+  function StackedBlockPane(list) {
+    window.ListPane.call(this, list, 'StackedBlock');
+    // TODO: implement serialization.
+  }
+
+  StackedBlockPane.prototype = Object.create(window.ListPane.prototype);
+  StackedBlockPane.prototype.constructor = StackedBlockPane;
+
   function createEditField(name, onClick) {
     var field = $('<div></div>').addClass('labeled-field');
     field.append($('<label></label>').text(name));
@@ -70,5 +80,6 @@
   }
 
   window.paneRegistry.LSTM = LSTMPane;
+  window.paneRegistry.StackedBlock = StackedBlockPane;
 
 })();

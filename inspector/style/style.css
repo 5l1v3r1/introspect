@@ -131,6 +131,11 @@ body.editing #edit-scene {
   transform: translate(0, 10px);
   -webkit-transform: translate(0, 10px);
 }
+.pane h1 {
+  font-weight: 300;
+  font-size: 24px;
+  margin: 10px 0 20px 0;
+}
 @media screen and (max-width: 520px) {
   .pane {
     width: calc(100% - 20px);
@@ -138,7 +143,7 @@ body.editing #edit-scene {
   }
 }
 .unsupported-pane h1 {
-  font-weight: 300;
+  margin: 10px 0;
 }
 .mat-pane {
   overflow-x: scroll;

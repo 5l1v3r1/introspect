@@ -30,11 +30,20 @@ func accessibleObject(obj interface{}) interface{} {
 	switch obj := obj.(type) {
 	case neuralnet.Network:
 		var children []interface{}
-		for child := range obj {
+		for _, child := range obj {
 			children = append(children, accessibleObject(child))
 		}
 		return map[string]interface{}{
 			"type": "Network",
+			"data": children,
+		}
+	case rnn.StackedBlock:
+		var children []interface{}
+		for _, child := range obj {
+			children = append(children, accessibleObject(child))
+		}
+		return map[string]interface{}{
+			"type": "StackedBlock",
 			"data": children,
 		}
 	case *rnn.LSTM:
