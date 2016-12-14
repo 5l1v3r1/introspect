@@ -2,9 +2,20 @@
 
   function VectorPane(values) {
     window.EditorPane.call(this);
+    this.element.addClass('vec-pane');
     this._values = values;
-    this.element.append($('<label>TODO: vector here</label>'));
-    // TODO: initialize UI here.
+    for (var i = 0, len = values.length; i < len; ++i) {
+      var field = $('<div></div>').addClass('labeled-field');
+      field.append($('<label></label>').text(i));
+      var input = $('<input>').val(values[i]).addClass('vec-component');
+      (function(i) {
+        input.change(function(e) {
+          values[i] = parseFloat(e.target.value);
+        });
+      })(i);
+      field.append(input);
+      this.element.append(field);
+    }
   }
 
   VectorPane.prototype = Object.create(window.EditorPane.prototype);

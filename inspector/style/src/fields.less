@@ -1,6 +1,7 @@
-.vec-field, .mat-field {
+.labeled-field {
   width: 100%;
   margin: 10px 0;
+  text-align: left;
 
   label {
     height: 30px;
@@ -9,23 +10,14 @@
     width: ~'calc(50% - 5px)';
     text-align: right;
     margin-right: 10px;
-  }
-
-  button {
-    padding: 0;
-    margin: 0;
-    width: 100px;
-    height: 30px;
-    line-height: 30px;
-
     font-size: 16px;
-    background-color: #777;
-    border: none;
-    color: white;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #555;
-    }
   }
+}
+
+.vec-component {
+  margin: 0;
+  padding: 0 5px;
+  height: 28px;
+  line-height: 28px;
+  font-size: 16px;
 }

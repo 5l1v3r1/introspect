@@ -269,25 +269,30 @@
   LSTMPane.prototype.constructor = LSTMPane;
 
   LSTMPane.prototype._vecField = function(name, vec) {
-    var field = $('<div></div>').addClass('vec-field');
-    field.append($('<label></label>').text(name));
-    field.append($('<button></button>').click(function() {
+    return createEditField(name, function() {
       var pane = new window.VectorPane(vec);
       this.onPush(pane);
-    }.bind(this)).text('Edit'));
-    return field;
+    }.bind(this));
   };
 
   LSTMPane.prototype._matField = function(name, mat) {
-    var field = $('<div></div>').addClass('mat-field');
-    field.append($('<label></label>').text(name));
-    field.append($('<button></button>').click(function() {
+    return createEditField(name, function() {
       var pane = new window.MatrixPane(this._stateSize,
         this._inSize+this._stateSize, mat);
       this.onPush(pane);
-    }.bind(this)).text('Edit'));
-    return field;
+    }.bind(this));
   };
+
+  function createEditField(name, onClick) {
+    var field = $('<div></div>').addClass('labeled-field');
+    field.append($('<label></label>').text(name));
+    field.append(createEditButton().click(onClick));
+    return field;
+  }
+
+  function createEditButton() {
+    return $('<button class="edit-button">Edit</button>');
+  }
 
   window.paneRegistry.LSTM = LSTMPane;
 
@@ -296,9 +301,20 @@
 
   function VectorPane(values) {
     window.EditorPane.call(this);
+    this.element.addClass('vec-pane');
     this._values = values;
-    this.element.append($('<label>TODO: vector here</label>'));
-    // TODO: initialize UI here.
+    for (var i = 0, len = values.length; i < len; ++i) {
+      var field = $('<div></div>').addClass('labeled-field');
+      field.append($('<label></label>').text(i));
+      var input = $('<input>').val(values[i]).addClass('vec-component');
+      (function(i) {
+        input.change(function(e) {
+          values[i] = parseFloat(e.target.value);
+        });
+      })(i);
+      field.append(input);
+      this.element.append(field);
+    }
   }
 
   VectorPane.prototype = Object.create(window.EditorPane.prototype);
