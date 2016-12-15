@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"os"
+	"time"
 
 	"github.com/chzyer/readline"
 	shellwords "github.com/mattn/go-shellwords"
@@ -14,6 +16,8 @@ import (
 var CurrentBlock rnn.Block
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	rl, err := readline.New("> ")
 	if err != nil {
 		die("init readline:", err)
@@ -51,6 +55,10 @@ func handleCommand(args []string) {
 		loadBlock(args[1:])
 	case "new":
 		newBlock(args[1:])
+	case "train":
+		trainBlock(args[1:])
+	case "cost":
+		costBlock(args[1:])
 	default:
 		fmt.Println("Unrecognized command:", args[0])
 		fmt.Println()
@@ -76,6 +84,15 @@ func printHelp() {
 	fmt.Println("    - Dense(in,out)")
 	fmt.Println("    - Sigmoid")
 	fmt.Println("    - LogSoftmax")
+	fmt.Println(" train <task> <num_samples> <step> [optimizer]")
+	fmt.Println("   train the RNN block")
+	fmt.Println("   tasks:")
+	fmt.Println("    - xor(seqLen)")
+	fmt.Println("   optimizers:")
+	fmt.Println("    - adam")
+	fmt.Println("    - plain")
+	fmt.Println(" cost <task> <num_samples>")
+	fmt.Println("   benchmark the RNN block on a task")
 	fmt.Println()
 }
 
