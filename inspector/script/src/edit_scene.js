@@ -84,6 +84,14 @@
     });
   };
 
+  EditorPane.prototype.addEditField = function(name, click) {
+    var button = $('<button class="edit-button">Edit</button>').click(click);
+    var field = $('<div></div>').addClass('labeled-field');
+    field.append($('<label></label>').text(name));
+    field.append(button);
+    this.element.append(field);
+  };
+
   EditorPane.prototype.hide = function(cb) {
     this.element.addClass('hidden');
     this._waitTransition(cb);
