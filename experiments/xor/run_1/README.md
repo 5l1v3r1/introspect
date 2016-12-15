@@ -2,9 +2,11 @@
 
 This document explores an RNN trained on the XOR task. The RNN itself is composed of an `LSTM(1,2)` followed by a `Dense(2,1)`. The RNN takes in a single binary digit at each timestep. The goal is to produce a highly-positive output if the current digit differs from the previous digit, producing a negative output otherwise.
 
+This particular RNN was trained using the `Adam` pre-conditioner with manual step-size annealing.
+
 # Results
 
-The LSTM block has two outputs. The output layer produces a classification using approximately 5*out[0] - 10*out[1]. The first output mirrors the input fairly closely, so a positive input pressures the network to output a positive output. The second output's sign usually indicates if the current input is different than the previous input, and its higher coefficient tends to dominate. However, when the sequence ends with 001, the second cell is positive (incorrect), so the output gate covers up the second output and relies on the first output to produce the desired network classification (positive).
+The LSTM block has two outputs. The output layer produces a classification using approximately 5\*out[0] - 10\*out[1]. The first output mirrors the input fairly closely, so a positive input pressures the network to output a positive output. The second output's sign usually indicates if the current input is different than the previous input, and its higher coefficient tends to dominate. However, when the sequence ends with 001, the second cell is positive (incorrect), so the output gate covers up the second output and relies on the first output to produce the desired network classification (positive).
 
 Interestingly, the first input value is always very nearly 1. The input gate for that input seems to vary between 0.6 and 1, tending towards lower values if more 1's have been seen recently. It seems that, for the first state, the output gate does most of the heavy lifting.
 

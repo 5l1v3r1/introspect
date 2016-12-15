@@ -1,0 +1,27 @@
+function [state, out, inVal, inGate, remGate, outGate] = timestep(in, inState, lastOut)
+  inValB = [2.4218753181823307; 0.6040426966691422];
+  inValP = [-1.0598232094791264; 2.6233369588434434];
+  inValW = [-4.490189090228695 -0.4413514621952142 3.6757193830018253; -0.33126577213557945 -1.5920884745806203 -0.5515557224761397];
+  inGateB = [5.7794815348797; 2.1104450633691054];
+  inGateP = [1.3510537013860062; -0.8959407977129953];
+  inGateW = [8.738522730672026 1.614292109304829 -11.613207845203254; -0.4429761378665666 -1.4351651069360294 0.5269129814900225];
+  remGateB = [-4.373916112959333; 2.266237030471131];
+  remGateP = [-1.7266458908049531; 1.9384914806178222];
+  remGateW = [-3.0274053221170116 -1.564389418243007 -0.0935810516460437; 0.8977044253677505 -0.8771967959022848 0.5830026603704382];
+  outGateB = [7.0166187798616315; 0.025052344505995857];
+  outGateP = [2.37635019137072; 0.03716869897128601];
+  outGateW = [3.838669365330894 0.7229103670171099 3.962208258359715; 11.614943053657651 2.6687016873059006 -4.788413012758453];
+
+  gateIn = [in; lastOut];
+
+  inVal = tanh(inValW*gateIn + inValP.*inState + inValB);
+  inGate = sigmoid(inGateW*gateIn + inGateP.*inState + inGateB);
+  remGate = sigmoid(remGateW*gateIn + remGateP.*inState + remGateB);
+  state = remGate.*inState + inGate.*inVal;
+  outGate = sigmoid(outGateW*gateIn + outGateP.*state + outGateB);
+  out = outGate .* tanh(state);
+end
+
+function [v] = sigmoid(x)
+  v = 1./(1.+exp(-x));
+end
