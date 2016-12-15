@@ -59,6 +59,10 @@ func handleCommand(args []string) {
 		trainBlock(args[1:])
 	case "cost":
 		costBlock(args[1:])
+	case "start":
+		startRunning(args[1:])
+	case "step":
+		stepRunning(args[1:])
 	default:
 		fmt.Println("Unrecognized command:", args[0])
 		fmt.Println()
@@ -93,6 +97,10 @@ func printHelp() {
 	fmt.Println("    - plain")
 	fmt.Println(" cost <task> <num_samples>")
 	fmt.Println("   benchmark the RNN block on a task")
+	fmt.Println(" start")
+	fmt.Println("   start a step-by-step running session")
+	fmt.Println(" step in_components...")
+	fmt.Println("   perform a timestep on the running session")
 	fmt.Println()
 }
 
