@@ -10,7 +10,12 @@
     window.location = 'data:application/octet-stream;base64,' + btoa(str);
   }
 
+  function downloadCode(code) {
+    window.location = 'data:application/octet-stream;base64,' + btoa(code);
+  }
+
   window.serializeAndDownload = serializeAndDownload;
+  window.downloadCode = downloadCode;
 
 })();
 (function() {
@@ -97,6 +102,12 @@
     b.click(function() {
       window.serializeAndDownload({type: name, data: data});
     });
+  };
+
+  EditorPane.prototype.addCodeButton = function(onClick) {
+    var b = $('<button class="code-button">Code</button>');
+    this.element.append(b);
+    b.click(onClick);
   };
 
   EditorPane.prototype.addEditField = function(name, click) {
@@ -193,6 +204,37 @@
   ListPane.prototype.constructor = ListPane;
 
   window.ListPane = ListPane;
+
+})();
+(function() {
+
+  function declareVector(name, values) {
+    var strs = [];
+    for (var i = 0, len = values.length; i < len; ++i) {
+      strs[i] = values[i] + '';
+    }
+    var value = strs.join('; ');
+    return name + ' = [' + value + '];';
+  }
+
+  function declareMatrix(name, rows, values) {
+    var cols = values.length / rows;
+    var rowStrs = [];
+    for (var row = 0; row < rows; ++row) {
+      var colStrs = [];
+      for (var col = 0; col < cols; ++col) {
+        colStrs[col] = values[col+row*cols] + '';
+      }
+      rowStrs[row] = colStrs.join(' ');
+    }
+    var value = rowStrs.join('; ');
+    return name + ' = [' + value + '];';
+  }
+
+  window.octave = {
+    declareVector: declareVector,
+    declareMatrix: declareMatrix
+  };
 
 })();
 (function() {
@@ -355,6 +397,18 @@
       this._addMatField(names[i]+' Weights', matrices[i]);
     }
     this.addSaveButton('LSTM', data);
+    this.addCodeButton(function() {
+      var names = ['inVal', 'inGate', 'remGate', 'outGate'];
+      var lines = [];
+      lines.push(window.octave.declareVector('initState', initState));
+      for (var i = 0; i < 4; i++) {
+        var n = names[i];
+        lines.push(window.octave.declareVector(n+'B', biases[i]));
+        lines.push(window.octave.declareVector(n+'P', peeps[i]));
+        lines.push(window.octave.declareMatrix(n+'W', this._stateSize, matrices[i]));
+      }
+      window.downloadCode(lines.join('\n'));
+    }.bind(this));
   }
 
   LSTMPane.prototype = Object.create(window.EditorPane.prototype);

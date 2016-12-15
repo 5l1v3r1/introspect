@@ -84,6 +84,12 @@
     });
   };
 
+  EditorPane.prototype.addCodeButton = function(onClick) {
+    var b = $('<button class="code-button">Code</button>');
+    this.element.append(b);
+    b.click(onClick);
+  };
+
   EditorPane.prototype.addEditField = function(name, click) {
     var button = $('<button class="edit-button">Edit</button>').click(click);
     var field = $('<div></div>').addClass('labeled-field');

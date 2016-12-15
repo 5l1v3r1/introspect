@@ -33,6 +33,18 @@
       this._addMatField(names[i]+' Weights', matrices[i]);
     }
     this.addSaveButton('LSTM', data);
+    this.addCodeButton(function() {
+      var names = ['inVal', 'inGate', 'remGate', 'outGate'];
+      var lines = [];
+      lines.push(window.octave.declareVector('initState', initState));
+      for (var i = 0; i < 4; i++) {
+        var n = names[i];
+        lines.push(window.octave.declareVector(n+'B', biases[i]));
+        lines.push(window.octave.declareVector(n+'P', peeps[i]));
+        lines.push(window.octave.declareMatrix(n+'W', this._stateSize, matrices[i]));
+      }
+      window.downloadCode(lines.join('\n'));
+    }.bind(this));
   }
 
   LSTMPane.prototype = Object.create(window.EditorPane.prototype);

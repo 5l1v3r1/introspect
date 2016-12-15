@@ -177,8 +177,24 @@ button:focus {
   border: none;
   color: white;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 10px 5px;
 }
 .save-button:hover {
+  background-color: #555;
+}
+.code-button {
+  padding: 0;
+  margin: 0;
+  width: 100px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  background-color: #777;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin: 10px 5px;
+}
+.code-button:hover {
   background-color: #555;
 }
