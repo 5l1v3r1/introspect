@@ -17,7 +17,7 @@ These are approximate values only, to give a rough sense of the values that each
  * In[0] = 0.92 in + 0.74 out[0] + 0.76 out[1] + 3.09 internal[0] + 0.57
    * Always 1
  * In[1] = 5.55 in - 4.68 out[0] + 0.65 out[1] - 1.36 internal[1] + 2.44
-   * -1 for ...10
+   * -1 for \*10
    * 1 otherwise
  * InGate[0] = -0.90 in - 0.45 out[0] + 0.67 out[1] + 1.74 internal[0] + 0.13
    * Lower as we get more 1's (down to 0.6)
