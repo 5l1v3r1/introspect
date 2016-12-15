@@ -51,25 +51,22 @@ func accessibleObject(obj interface{}) interface{} {
 	case *neuralnet.DenseLayer:
 		return accessibleLearner("DenseLayer", obj)
 	case *rnn.NetworkBlock:
-		return map[string]interface{}{
+		res := map[string]interface{}{
 			"type": "NetworkBlock",
 			"data": map[string]interface{}{
 				"startState": []float64(obj.StartState().(rnn.VecState)),
 				"network":    accessibleObject(obj.Network()),
 			},
 		}
-	case neuralnet.HyperbolicTangent:
+		return res
+	case neuralnet.HyperbolicTangent, *neuralnet.HyperbolicTangent:
 		return accessibleActivation("HyperbolicTangent")
-	case *neuralnet.HyperbolicTangent:
-		return accessibleActivation("HyperbolicTangent")
-	case neuralnet.Sigmoid:
+	case neuralnet.Sigmoid, *neuralnet.Sigmoid:
 		return accessibleActivation("Sigmoid")
-	case *neuralnet.Sigmoid:
-		return accessibleActivation("Sigmoid")
-	case neuralnet.ReLU:
+	case neuralnet.ReLU, *neuralnet.ReLU:
 		return accessibleActivation("ReLU")
-	case *neuralnet.ReLU:
-		return accessibleActivation("ReLU")
+	case neuralnet.LogSoftmaxLayer, *neuralnet.LogSoftmaxLayer:
+		return accessibleActivation("LogSoftmaxLayer")
 	case *neuralnet.RescaleLayer:
 		return map[string]interface{}{
 			"type": "RescaleLayer",

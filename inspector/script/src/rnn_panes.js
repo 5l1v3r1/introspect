@@ -1,8 +1,7 @@
 (function() {
 
   function LSTMPane(data) {
-    window.EditorPane.call(this);
-    this.element.append($('<h1></h1>').text('LSTM'));
+    window.EditorPane.call(this, 'LSTM');
 
     var inValWeights = data[0];
     var inValBiases = data[1];
@@ -33,9 +32,7 @@
       this.element.append(this._vecField(names[i]+' Peephole', peeps[i]));
       this.element.append(this._matField(names[i]+' Weights', matrices[i]));
     }
-    this.element.append(createSaveButton().click(function() {
-      window.serializeAndDownload({type: 'LSTM', data: data});
-    }.bind(this)));
+    this.addSaveButton('LSTM', data);
   }
 
   LSTMPane.prototype = Object.create(window.EditorPane.prototype);
@@ -58,11 +55,25 @@
 
   function StackedBlockPane(list) {
     window.ListPane.call(this, list, 'StackedBlock');
-    // TODO: implement serialization.
+    this.addSaveButton('StackedBlock', list);
   }
 
   StackedBlockPane.prototype = Object.create(window.ListPane.prototype);
   StackedBlockPane.prototype.constructor = StackedBlockPane;
+
+  function NetworkBlock(info) {
+    window.EditorPane.call(this, 'NetworkBlock');
+    this.element.append(createEditField('InitState', function() {
+      this.onPush(new window.VectorPane(info.startState));
+    }.bind(this)));
+    this.element.append(createEditField('Network', function() {
+      this.onPush(window.paneForObject(info.network));
+    }.bind(this)));
+    this.addSaveButton('NetworkBlock', info);
+  }
+
+  NetworkBlock.prototype = Object.create(window.EditorPane.prototype);
+  NetworkBlock.prototype.constructor = NetworkBlock;
 
   function createEditField(name, onClick) {
     var field = $('<div></div>').addClass('labeled-field');
@@ -75,11 +86,8 @@
     return $('<button class="edit-button">Edit</button>');
   }
 
-  function createSaveButton() {
-    return $('<button class="save-button">Save</button>');
-  }
-
   window.paneRegistry.LSTM = LSTMPane;
   window.paneRegistry.StackedBlock = StackedBlockPane;
+  window.paneRegistry.NetworkBlock = NetworkBlock;
 
 })();

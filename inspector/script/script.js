@@ -82,10 +82,22 @@
     }.bind(this));
   };
 
-  function EditorPane() {
+  function EditorPane(title) {
     this.onPush = nop;
     this.element = $('<div class="pane hidden"></div>');
+
+    if (title) {
+      this.element.append($('<h1></h1>').text(title));
+    }
   }
+
+  EditorPane.prototype.addSaveButton = function(name, data) {
+    var b = $('<button class="save-button">Save</button>');
+    this.element.append(b);
+    b.click(function() {
+      window.serializeAndDownload({type: name, data: data});
+    });
+  };
 
   EditorPane.prototype.hide = function(cb) {
     this.element.addClass('hidden');
@@ -110,8 +122,7 @@
   };
 
   function UnsupportedPane(name) {
-    EditorPane.call(this);
-    this.element.append($('<h1></h1>').text('Unsupported type: ' + name));
+    EditorPane.call(this, 'Unsupported: ' + name);
     this.element.addClass('unsupported-pane');
   }
 
@@ -156,8 +167,7 @@
 (function() {
 
   function ListPane(items, title) {
-    window.EditorPane.call(this);
-    this.element.append($('<h1></h1>').text(title));
+    window.EditorPane.call(this, title);
     for (var i = 0, len = items.length; i < len; ++i) {
       (function(item) {
         var field = $('<div></div>').addClass('labeled-field');
@@ -274,9 +284,21 @@
 })();
 (function() {
 
+  function NetworkPane(data) {
+    window.ListPane.call(this, data, 'Network');
+    this.addSaveButton('Network', data);
+  }
+
+  NetworkPane.prototype = Object.create(window.ListPane.prototype);
+  NetworkPane.prototype.constructor = NetworkPane;
+
+  window.paneRegistry.Network = NetworkPane;
+
+})();
+(function() {
+
   function LSTMPane(data) {
-    window.EditorPane.call(this);
-    this.element.append($('<h1></h1>').text('LSTM'));
+    window.EditorPane.call(this, 'LSTM');
 
     var inValWeights = data[0];
     var inValBiases = data[1];
@@ -307,9 +329,7 @@
       this.element.append(this._vecField(names[i]+' Peephole', peeps[i]));
       this.element.append(this._matField(names[i]+' Weights', matrices[i]));
     }
-    this.element.append(createSaveButton().click(function() {
-      window.serializeAndDownload({type: 'LSTM', data: data});
-    }.bind(this)));
+    this.addSaveButton('LSTM', data);
   }
 
   LSTMPane.prototype = Object.create(window.EditorPane.prototype);
@@ -332,11 +352,25 @@
 
   function StackedBlockPane(list) {
     window.ListPane.call(this, list, 'StackedBlock');
-    // TODO: implement serialization.
+    this.addSaveButton('StackedBlock', list);
   }
 
   StackedBlockPane.prototype = Object.create(window.ListPane.prototype);
   StackedBlockPane.prototype.constructor = StackedBlockPane;
+
+  function NetworkBlock(info) {
+    window.EditorPane.call(this, 'NetworkBlock');
+    this.element.append(createEditField('InitState', function() {
+      this.onPush(new window.VectorPane(info.startState));
+    }.bind(this)));
+    this.element.append(createEditField('Network', function() {
+      this.onPush(window.paneForObject(info.network));
+    }.bind(this)));
+    this.addSaveButton('NetworkBlock', info);
+  }
+
+  NetworkBlock.prototype = Object.create(window.EditorPane.prototype);
+  NetworkBlock.prototype.constructor = NetworkBlock;
 
   function createEditField(name, onClick) {
     var field = $('<div></div>').addClass('labeled-field');
@@ -349,18 +383,15 @@
     return $('<button class="edit-button">Edit</button>');
   }
 
-  function createSaveButton() {
-    return $('<button class="save-button">Save</button>');
-  }
-
   window.paneRegistry.LSTM = LSTMPane;
   window.paneRegistry.StackedBlock = StackedBlockPane;
+  window.paneRegistry.NetworkBlock = NetworkBlock;
 
 })();
 (function() {
 
-  function VectorPane(values) {
-    window.EditorPane.call(this);
+  function VectorPane(values, title) {
+    window.EditorPane.call(this, title || 'Vector');
     this._values = values;
     for (var i = 0, len = values.length; i < len; ++i) {
       var field = $('<div></div>').addClass('labeled-field');
@@ -379,8 +410,8 @@
   VectorPane.prototype = Object.create(window.EditorPane.prototype);
   VectorPane.prototype.constructor = VectorPane;
 
-  function MatrixPane(rows, cols, values) {
-    window.EditorPane.call(this);
+  function MatrixPane(rows, cols, values, title) {
+    window.EditorPane.call(this, title || 'Matrix');
 
     this.element.addClass('mat-pane');
 

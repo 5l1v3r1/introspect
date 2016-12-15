@@ -67,10 +67,22 @@
     }.bind(this));
   };
 
-  function EditorPane() {
+  function EditorPane(title) {
     this.onPush = nop;
     this.element = $('<div class="pane hidden"></div>');
+
+    if (title) {
+      this.element.append($('<h1></h1>').text(title));
+    }
   }
+
+  EditorPane.prototype.addSaveButton = function(name, data) {
+    var b = $('<button class="save-button">Save</button>');
+    this.element.append(b);
+    b.click(function() {
+      window.serializeAndDownload({type: name, data: data});
+    });
+  };
 
   EditorPane.prototype.hide = function(cb) {
     this.element.addClass('hidden');
@@ -95,8 +107,7 @@
   };
 
   function UnsupportedPane(name) {
-    EditorPane.call(this);
-    this.element.append($('<h1></h1>').text('Unsupported type: ' + name));
+    EditorPane.call(this, 'Unsupported: ' + name);
     this.element.addClass('unsupported-pane');
   }
 

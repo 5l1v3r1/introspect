@@ -1,7 +1,7 @@
 (function() {
 
-  function VectorPane(values) {
-    window.EditorPane.call(this);
+  function VectorPane(values, title) {
+    window.EditorPane.call(this, title || 'Vector');
     this._values = values;
     for (var i = 0, len = values.length; i < len; ++i) {
       var field = $('<div></div>').addClass('labeled-field');
@@ -20,8 +20,8 @@
   VectorPane.prototype = Object.create(window.EditorPane.prototype);
   VectorPane.prototype.constructor = VectorPane;
 
-  function MatrixPane(rows, cols, values) {
-    window.EditorPane.call(this);
+  function MatrixPane(rows, cols, values, title) {
+    window.EditorPane.call(this, title || 'Matrix');
 
     this.element.addClass('mat-pane');
 

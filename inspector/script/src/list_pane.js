@@ -1,8 +1,7 @@
 (function() {
 
   function ListPane(items, title) {
-    window.EditorPane.call(this);
-    this.element.append($('<h1></h1>').text(title));
+    window.EditorPane.call(this, title);
     for (var i = 0, len = items.length; i < len; ++i) {
       (function(item) {
         var field = $('<div></div>').addClass('labeled-field');
