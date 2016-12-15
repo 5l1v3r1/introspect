@@ -346,7 +346,7 @@
     var biases = [inValBiases, inGateBiases, remGateBiases, outGateBiases];
     var peeps = [inValPeep, inGatePeep, remGatePeep, outGatePeep];
 
-    this.element.append(this._vecField('InitState', initState));
+    this._addVecField('InitState', initState);
 
     var names = ['In Val.', 'In Gate', 'Rem. Gate', 'Out Gate'];
     for (var i = 0; i < 4; i++) {
